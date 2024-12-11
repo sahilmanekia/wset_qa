@@ -1,9 +1,18 @@
 from fastapi import FastAPI, UploadFile, HTTPException
 from PyPDF2 import PdfReader
 from transformers import pipeline
+import uvicorn
+import os
 
 app = FastAPI()
+@app.get("/")
+def read_root():
+    return {"message": "Hello, Render!"}
 
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run(app, host="0.0.0.0", port=port)
+    
 # Load the question generation pipeline
 #question_generator = pipeline("question-generation")
 question_generator = pipeline("text2text-generation", model="valhalla/t5-small-qg-prepend")
