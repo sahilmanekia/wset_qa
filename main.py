@@ -5,7 +5,8 @@ from transformers import pipeline
 app = FastAPI()
 
 # Load the question generation pipeline
-question_generator = pipeline("question-generation")
+#question_generator = pipeline("question-generation")
+question_generator = pipeline("text2text-generation", model="valhalla/t5-small-qg-prepend")
 
 # Function to extract text from PDF
 def extract_text_from_pdf(pdf_file):
@@ -28,10 +29,12 @@ async def generate_questions(pdf: UploadFile):
     pdf_text = extract_text_from_pdf(pdf.file)
 
     # Generate questions (limit to 5 for simplicity)
-    questions = question_generator(pdf_text, max_length=512)[:5]
+    #questions = question_generator(pdf_text, max_length=512)[:5]
+    questions = question_generator("generate questions:" + pdf_text, max_length=512)[:5]
 
     # Format the output
     formatted_questions = [
-        {"question": q["question"], "answer": q["answer"]} for q in questions
+        {"question":q["generated_text"] for q in questions}
+        #{"question": q["question"], "answer": q["answer"]} for q in questions
     ]
     return {"questions": formatted_questions}
