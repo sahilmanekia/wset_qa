@@ -1,6 +1,6 @@
 fastapi
 uvicorn
 transformers
-torch
+torch==2.0.1+cpu
 PyPDF2
 gunicorn
